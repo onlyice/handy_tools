@@ -11,7 +11,7 @@ class IdSets extends React.Component {
         a: '', b: '',
       },
       results: {
-        a_union_b: '', a_sub_b: '', b_sub_a: '',
+        a_union_b: '', a_intersection_b: '', a_sub_b: '', b_sub_a: '',
       },
       result_separator: defaultSeparator,
       result_separator_internal: defaultSeparator,
@@ -41,13 +41,16 @@ class IdSets extends React.Component {
   }
 
   calculate(sources, separator) {
-    separator = separator || this.state.result_separator;
+    if (separator === undefined) {
+      separator = this.state.result_separator;
+    }
     let separator_internal = separator.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
 
     let ids_a = sources.a.split(/[^0-9]/).filter(e => e);
     let ids_b = sources.b.split(/[^0-9]/).filter(e => e);
 
     let a_union_b = _.union(ids_a, ids_b);
+    let a_intersection_b = _.intersection(ids_a, ids_b);
     let a_sub_b = _.difference(ids_a, ids_b);
     let b_sub_a = _.difference(ids_b, ids_a);
 
@@ -55,6 +58,7 @@ class IdSets extends React.Component {
       sources: sources,
       results: {
         a_union_b: a_union_b.join(separator_internal),
+        a_intersection_b: a_intersection_b.join(separator_internal),
         a_sub_b: a_sub_b.join(separator_internal),
         b_sub_a: b_sub_a.join(separator_internal),
       },
@@ -107,12 +111,20 @@ class IdSets extends React.Component {
           </div>
         </div>
         <div className="ui grid">
-          <div className="three column row">
+          <div className="four column row">
             <div className="column">
               <div className="ui form">
                 <div className="field">
                   <label>A | B</label>
                   <textarea rows={3} value={this.state.results.a_union_b}/>
+                </div>
+              </div>
+            </div>
+            <div className="column">
+              <div className="ui form">
+                <div className="field">
+                  <label>A & B</label>
+                  <textarea rows={3} value={this.state.results.a_intersection_b}/>
                 </div>
               </div>
             </div>
