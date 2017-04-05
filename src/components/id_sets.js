@@ -1,6 +1,39 @@
 import React from 'react';
 import _ from 'lodash';
 
+class ItemCount extends React.Component {
+  constructor(props) {
+    super(props)
+  }
+
+  render() {
+    if (this.props.count <= 0) {
+      return null;
+    }
+    if (this.props.count === 1) {
+      return (<span>({this.props.count} item)</span>)
+    }
+    return (<span>({this.props.count} items)</span>)
+  }
+}
+
+class SetOperationResult extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className="ui form">
+        <div className="field">
+          <label>{this.props.title} <ItemCount count={this.props.items.length} /></label>
+          <textarea rows={3} value={this.props.items.join(this.props.separator)} />
+        </div>
+      </div>
+    )
+  }
+}
+
 class IdSets extends React.Component {
   constructor(props) {
     super(props);
@@ -10,8 +43,11 @@ class IdSets extends React.Component {
       sources: {
         a: '', b: '',
       },
+      sources_internal: {
+        a: [], b: [],
+      },
       results: {
-        a_union_b: '', a_intersection_b: '', a_sub_b: '', b_sub_a: '',
+        a_union_b: [], a_intersection_b: [], a_sub_b: [], b_sub_a: [],
       },
       result_separator: defaultSeparator,
       result_separator_internal: defaultSeparator,
@@ -56,11 +92,14 @@ class IdSets extends React.Component {
 
     this.setState({
       sources: sources,
+      sources_internal: {
+        a: ids_a, b: ids_b,
+      },
       results: {
-        a_union_b: a_union_b.join(separator_internal),
-        a_intersection_b: a_intersection_b.join(separator_internal),
-        a_sub_b: a_sub_b.join(separator_internal),
-        b_sub_a: b_sub_a.join(separator_internal),
+        a_union_b: a_union_b,
+        a_intersection_b: a_intersection_b,
+        a_sub_b: a_sub_b,
+        b_sub_a: b_sub_a,
       },
       result_separator: separator,
       result_separator_internal: separator_internal,
@@ -73,7 +112,7 @@ class IdSets extends React.Component {
         <h2>ID Sets Operation</h2>
 
         <h3>Data Sources</h3>
-        <p>You can input any number sequences with any non digit characters. Examples:</p>
+        <p>You can input any number sequences with any non-digit characters as separator. Examples:</p>
         <ul>
           <li>4133,58392,41958</li>
           <li>29584;91338;59601</li>
@@ -84,7 +123,7 @@ class IdSets extends React.Component {
             <div className="column">
               <div className="ui form">
                 <div className="field">
-                  <label>ID Set A</label>
+                  <label>ID Set A <ItemCount count={this.state.sources_internal.a.length} /></label>
                   <textarea rows={3} value={this.state.sources.a} onChange={this.getSourceChangeHandler('a')}/>
                 </div>
               </div>
@@ -92,7 +131,7 @@ class IdSets extends React.Component {
             <div className="column">
               <div className="ui form">
                 <div className="field">
-                  <label>ID Set B</label>
+                  <label>ID Set B <ItemCount count={this.state.sources_internal.b.length} /></label>
                   <textarea rows={3} value={this.state.sources.b} onChange={this.getSourceChangeHandler('b')}/>
                 </div>
               </div>
@@ -114,34 +153,34 @@ class IdSets extends React.Component {
           <div className="four column row">
             <div className="column">
               <div className="ui form">
-                <div className="field">
-                  <label>A | B</label>
-                  <textarea rows={3} value={this.state.results.a_union_b}/>
-                </div>
+                <SetOperationResult
+                  title="A | B" items={this.state.results.a_union_b}
+                  separator={this.state.result_separator_internal}
+                />
               </div>
             </div>
             <div className="column">
               <div className="ui form">
-                <div className="field">
-                  <label>A & B</label>
-                  <textarea rows={3} value={this.state.results.a_intersection_b}/>
-                </div>
+                <SetOperationResult
+                  title="A & B" items={this.state.results.a_intersection_b}
+                  separator={this.state.result_separator_internal}
+                />
               </div>
             </div>
             <div className="column">
               <div className="ui form">
-                <div className="field">
-                  <label>A - B</label>
-                  <textarea rows={3} value={this.state.results.a_sub_b}/>
-                </div>
+                <SetOperationResult
+                  title="A - B" items={this.state.results.a_sub_b}
+                  separator={this.state.result_separator_internal}
+                />
               </div>
             </div>
             <div className="column">
               <div className="ui form">
-                <div className="field">
-                  <label>B - A</label>
-                  <textarea rows={3} value={this.state.results.b_sub_a}/>
-                </div>
+                <SetOperationResult
+                  title="B - A" items={this.state.results.b_sub_a}
+                  separator={this.state.result_separator_internal}
+                />
               </div>
             </div>
           </div>
