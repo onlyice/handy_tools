@@ -12,7 +12,7 @@ class Numbers extends React.Component {
       sources: '',
       sources_internal: [],
       operation: '+',
-      amount: 1,
+      amount: 0,
       results: [],
       result_separator: defaultSeparator,
       result_separator_internal: defaultSeparator,
@@ -46,7 +46,7 @@ class Numbers extends React.Component {
   handleAmountChange(event) {
     event.persist();
     this.setState(() => {
-      return {amount: parseFloat(event.target.value)};
+      return {amount: parseFloat(event.target.value) || 0};
     }, () => {
       this.calculate();
     });
