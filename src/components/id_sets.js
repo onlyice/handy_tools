@@ -51,8 +51,8 @@ class IdSets extends React.Component {
     }
     let separator_internal = separator.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
 
-    let ids_a = sources.a.split(/[^0-9]/).filter(e => e);
-    let ids_b = sources.b.split(/[^0-9]/).filter(e => e);
+    let ids_a = sources.a.split(/[^0-9.]/).filter(e => e);
+    let ids_b = sources.b.split(/[^0-9.]/).filter(e => e);
 
     let a_union_b = _.union(ids_a, ids_b);
     let a_intersection_b = _.intersection(ids_a, ids_b);

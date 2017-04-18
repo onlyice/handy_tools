@@ -62,7 +62,7 @@ class Numbers extends React.Component {
     }
     let separator_internal = separator.replace(/\\n/g, '\n').replace(/\\t/g, '\t');
 
-    let sources_internal = this.state.sources.split(/[^0-9]/).filter(e => e);
+    let sources_internal = this.state.sources.split(/[^0-9.]/).filter(e => e);
     let operation_funcs = {
       '+': _.add, '-': _.subtract, '*': _.multiply, '/': _.divide
     };
